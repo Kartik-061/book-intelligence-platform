@@ -1,4 +1,6 @@
 # BookIQ - AI-Powered Book Intelligence Platform
+## 🚀 Live Demo
+**Live API:** https://web-production-93bef.up.railway.app/api/books/
 
 A full-stack web app with RAG pipeline and AI insights for book discovery.
 
