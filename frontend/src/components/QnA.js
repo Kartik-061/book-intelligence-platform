@@ -8,14 +8,14 @@ export default function QnA() {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/history/').then(r => setHistory(r.data));
+    axios.get('https://web-production-93bef.up.railway.app/api/history/').then(r => setHistory(r.data));
   }, []);
 
   const askQuestion = async () => {
     if (!question.trim()) return;
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:8000/api/ask/', { question });
+      const res = await axios.post('https://web-production-93bef.up.railway.app/api/ask/', { question });
       setAnswer(res.data.answer);
       setHistory(prev => [{question, answer: res.data.answer, id: Date.now()}, ...prev]);
     } catch(e) { setAnswer('Error getting answer. Please try again.'); }

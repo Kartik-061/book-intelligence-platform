@@ -12,7 +12,7 @@ export default function BookList() {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:8000/api/books/');
+      const res = await axios.get('https://web-production-93bef.up.railway.app/api/books/');
       setBooks(res.data);
     } catch(e) { console.error(e); }
     setLoading(false);
@@ -21,7 +21,7 @@ export default function BookList() {
   const scrapeBooks = async () => {
     setScraping(true);
     try {
-      await axios.post('http://localhost:8000/api/books/upload/');
+      await axios.post('https://web-production-93bef.up.railway.app/api/books/upload/');
       await fetchBooks();
     } catch(e) { console.error(e); }
     setScraping(false);
