@@ -1,1 +1,1 @@
-web: gunicorn backend.wsgi --log-file -
+web: /app/.venv/bin/gunicorn backend.wsgi --log-file
