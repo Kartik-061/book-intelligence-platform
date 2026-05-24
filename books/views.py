@@ -3,14 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Book, ChatHistory
 from .serializers import BookSerializer, ChatHistorySerializer
-import google.generativeai as genai
+from google import genai
 from django.conf import settings
 import chromadb
 import json
 
 # Setup Gemini
-genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 # Setup ChromaDB
 chroma_client = chromadb.Client()
@@ -63,7 +62,7 @@ def upload_books(request):
                 Return JSON only: {{"summary": "...", "genre": "...", "sentiment": "..."}}"""
                 
                 try:
-                    ai_resp = model.generate_content(prompt)
+                    ai_resp = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
                     text = ai_resp.text.strip()
                     if '```' in text:
                         text = text.split('```')[1]
@@ -119,7 +118,7 @@ Answer this question: {question}
 
 Give a helpful, specific answer based on the books above."""
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
         answer = response.text
 
         # Save chat history
