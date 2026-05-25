@@ -9,7 +9,7 @@ import chromadb
 import json
 
 # Setup Gemini
-client = genai.Client(api_key=settings.GEMINI_API_KEY, http_options={'api_version': 'v1'})
+client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 # Setup ChromaDB
 chroma_client = chromadb.Client()
@@ -62,7 +62,7 @@ def upload_books(request):
                 Return JSON only: {{"summary": "...", "genre": "...", "sentiment": "..."}}"""
                 
                 try:
-                    ai_resp = client.models.generate_content(model='gemini-2.0-flash-exp', contents=prompt)
+                    ai_resp = client.models.generate_content(model='gemini-2.0-flash', contents=prompt)
                     text = ai_resp.text.strip()
                     if '```' in text:
                         text = text.split('```')[1]
@@ -118,7 +118,7 @@ Answer this question: {question}
 
 Give a helpful, specific answer based on the books above."""
 
-        response = client.models.generate_content(model='gemini-2.0-flash-exp', contents=prompt)
+        response = client.models.generate_content(model='gemini-2.0-flash', contents=prompt)
         answer = response.text
 
         # Save chat history
