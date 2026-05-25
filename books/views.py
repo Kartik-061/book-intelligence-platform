@@ -62,7 +62,7 @@ def upload_books(request):
                 Return JSON only: {{"summary": "...", "genre": "...", "sentiment": "..."}}"""
                 
                 try:
-                    ai_resp = client.models.generate_content(model='gemini-1.5-flash-latest', contents=prompt)
+                    ai_resp = client.models.generate_content(model='gemini-1.5-flash-001', contents=prompt)
                     text = ai_resp.text.strip()
                     if '```' in text:
                         text = text.split('```')[1]
@@ -118,7 +118,7 @@ Answer this question: {question}
 
 Give a helpful, specific answer based on the books above."""
 
-        response = client.models.generate_content(model='gemini-1.5-flash-latest', contents=prompt)
+        response = client.models.generate_content(model='gemini-1.5-flash-001', contents=prompt)
         answer = response.text
 
         # Save chat history
