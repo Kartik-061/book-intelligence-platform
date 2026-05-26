@@ -7,6 +7,7 @@ from google import genai
 from django.conf import settings
 import chromadb
 import json
+import re
 
 # Setup Gemini
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
@@ -101,6 +102,11 @@ def upload_books(request):
 def ask_question(request):
     """RAG pipeline for Q&A"""
     question = request.data.get('question', '')
+    # Input validation
+    if len(question) > 500:
+        return Response({'error': 'Question too long. Max 500 characters.'}, status=400)
+    question = re.sub(r'<[^>]+>', '', question)  # Strip HTML
+    question = question.strip()
     if not question:
         return Response({'error': 'No question provided'}, status=400)
     
