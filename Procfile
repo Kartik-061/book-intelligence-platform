@@ -1,1 +1,1 @@
-web: /app/.venv/bin/gunicorn backend.wsgi --log-file
+web: python manage.py createsuperuser --no-input 2>/dev/null || true && /app/.venv/bin/gunicorn backend.wsgi --log-file -
