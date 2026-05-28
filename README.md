@@ -2,10 +2,6 @@
 
 ![BookIQ](https://img.shields.io/badge/Status-Live-brightgreen) ![Django](https://img.shields.io/badge/Django-REST_Framework-092E20) ![React](https://img.shields.io/badge/Frontend-React.js-61DAFB) ![AI](https://img.shields.io/badge/AI-Gemini_2.5-4285F4)
 
-## Screenshots
-![Dashboard](screenshots/dashboard.png)
-![Book Detail](screenshots/detail.png)
-![Ask AI](screenshots/qa.png)
 
 > Built in 48 hours as an internship assignment. Full-stack AI platform for book discovery, semantic search, and intelligent Q&A.
 
