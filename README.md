@@ -1,32 +1,50 @@
 # BookIQ - AI-Powered Book Intelligence Platform
-## 🚀 Live Demo
-**Live API:** https://web-production-93bef.up.railway.app/api/books/
 
-A full-stack web app with RAG pipeline and AI insights for book discovery.
+![BookIQ](https://img.shields.io/badge/Status-Live-brightgreen) ![Django](https://img.shields.io/badge/Django-REST_Framework-092E20) ![React](https://img.shields.io/badge/Frontend-React.js-61DAFB) ![AI](https://img.shields.io/badge/AI-Gemini_2.5-4285F4)
 
 ## Screenshots
 ![Dashboard](screenshots/dashboard.png)
 ![Book Detail](screenshots/detail.png)
 ![Ask AI](screenshots/qa.png)
 
-## Features
-- Automated scraping from books.toscrape.com
-- AI summaries, genre classification, sentiment analysis via Gemini
-- RAG-based Q&A over book database
-- ChromaDB vector storage
-- Django REST Framework backend
-- React.js frontend
+> Built in 48 hours as an internship assignment. Full-stack AI platform for book discovery, semantic search, and intelligent Q&A.
 
-## Tech Stack
-- Backend: Django 6.0, Django REST Framework
-- Database: SQLite + ChromaDB
-- AI: Google Gemini 1.5 Flash
-- Frontend: React.js
-- Scraping: BeautifulSoup, Requests
+## 🚀 Live Demo
+**[https://book-intelligence-platform-production.up.railway.app](https://book-intelligence-platform-production.up.railway.app)**
 
-## Setup
+## ✨ Features
+- 📚 **588+ Books** scraped from Open Library & Gutenberg
+- 🤖 **Ask AI** — RAG-based Q&A over entire book database using Gemini
+- 🔐 **JWT Authentication** — Register, Login, Logout
+- 🔍 **Semantic Search** via ChromaDB vector embeddings
+- 📊 **AI Insights** — Genre classification, sentiment analysis, summaries
+- 🛡️ **Rate Limiting** — 30 req/min (anon), 60 req/min (user)
+- 💬 **Chat History** — Persistent Q&A history
 
-### Backend
+## 🛠️ Tech Stack
+| Layer | Technology |
+|-------|-----------|
+| Backend | Django 6.0, Django REST Framework |
+| Frontend | React.js |
+| AI | Google Gemini 2.5 Flash |
+| Vector DB | ChromaDB |
+| Database | SQLite |
+| Deployment | Railway |
+
+## 📡 API Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/books/ | List all books |
+| GET | /api/books/{id}/ | Book detail |
+| GET | /api/books/{id}/recommend/ | AI recommendations |
+| POST | /api/ask/ | Ask AI question |
+| GET | /api/history/ | Chat history |
+| POST | /api/register/ | User registration |
+| POST | /api/token/ | JWT login |
+
+## ⚙️ Local Setup
+
+**Backend**
 ```bash
 cd backend
 python -m venv venv
@@ -36,27 +54,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### Frontend
+**Frontend**
 ```bash
 cd frontend
 npm install
 npm start
 ```
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/books/ | List all books |
-| GET | /api/books/{id}/ | Book detail |
-| GET | /api/books/{id}/recommend/ | Recommendations |
-| POST | /api/books/upload/ | Scrape books |
-| POST | /api/ask/ | Ask AI question |
-| GET | /api/history/ | Chat history |
-
-## Sample Q&A
-**Q:** Recommend a mystery book  
-**A:** Sharp Objects by Gillian Flynn (4/5 stars) is highly recommended...
-
-**Q:** What is the highest rated book?  
-**A:** Sapiens: A Brief History of Humankind has a perfect 5/5 rating...
+## 👨‍💻 Author
+**Kartikya Motwani** — [LinkedIn](https://linkedin.com/in/kartikya-m-dev) | [GitHub](https://github.com/Kartik-061)
