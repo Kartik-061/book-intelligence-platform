@@ -1,9 +1,9 @@
 import requests
 import time
 
-def scrape_gutenberg(limit=500):
+def scrape_gutenberg(limit=500, start_page=1):
     books = []
-    page = 1
+    page = start_page
     while len(books) < limit:
         url = f"https://gutendex.com/books/?page={page}"
         response = requests.get(url)
@@ -27,7 +27,7 @@ def scrape_gutenberg(limit=500):
     return books[:limit]
 
 if __name__ == "__main__":
-    books = scrape_gutenberg(100)
+    books = scrape_gutenberg(100, start_page=1)
     print(f"Scraped {len(books)} books")
     for b in books[:3]:
         print(b['title'], '-', b['author'])
