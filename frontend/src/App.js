@@ -4,12 +4,14 @@ import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import QnA from './components/QnA';
 import { AuthProvider, useAuth } from './AuthContext';
+import Register from './Register';
 import Login from './Login';
 import './App.css';
 
 function NavBar() {
   const { token, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   return (
     <>
@@ -17,19 +19,25 @@ function NavBar() {
         <span style={{fontSize:'20px',fontWeight:'bold',color:'#6366f1'}}>📚 BookIQ</span>
         <Link to="/" style={{color:'#94a3b8',textDecoration:'none'}}>Home</Link>
         <Link to="/qa" style={{color:'#94a3b8',textDecoration:'none'}}>Ask AI</Link>
-        <div style={{marginLeft:'auto'}}>
+        <div style={{marginLeft:'auto', display:'flex', gap:'8px'}}>
           {token ? (
             <button onClick={logout} style={{padding:'8px 16px',background:'#ef4444',color:'white',border:'none',borderRadius:'8px',cursor:'pointer'}}>
               Logout
             </button>
           ) : (
-            <button onClick={() => setShowLogin(true)} style={{padding:'8px 16px',background:'#6c63ff',color:'white',border:'none',borderRadius:'8px',cursor:'pointer'}}>
-              Login
-            </button>
+            <>
+              <button onClick={() => setShowLogin(true)} style={{padding:'8px 16px',background:'#6c63ff',color:'white',border:'none',borderRadius:'8px',cursor:'pointer'}}>
+                Login
+              </button>
+              <button onClick={() => setShowRegister(true)} style={{padding:'8px 16px',background:'#22c55e',color:'white',border:'none',borderRadius:'8px',cursor:'pointer'}}>
+                Register
+              </button>
+            </>
           )}
         </div>
       </nav>
       {showLogin && <Login onClose={() => setShowLogin(false)} />}
+      {showRegister && <Register onClose={() => setShowRegister(false)} onSwitchToLogin={() => { setShowRegister(false); setShowLogin(true); }} />}
     </>
   );
 }

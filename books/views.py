@@ -2,6 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Book, ChatHistory
+from django.contrib.auth.models import User
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .serializers import BookSerializer, ChatHistorySerializer
 from google import genai
 from django.conf import settings
@@ -139,3 +142,20 @@ def chat_history(request):
     history = ChatHistory.objects.all().order_by('-created_at')[:20]
     serializer = ChatHistorySerializer(history, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def register_user(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    if not username or not password:
+        return Response({'error': 'Username and password required'}, status=400)
+    
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already taken'}, status=400)
+    
+    if len(password) < 6:
+        return Response({'error': 'Password must be at least 6 characters'}, status=400)
+    
+    User.objects.create_user(username=username, password=password)
+    return Response({'message': 'User created successfully'}, status=201)
