@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from books.views import register_user, submit_feedback
 
 urlpatterns = [
     path('books/', views.list_books),
@@ -8,4 +9,5 @@ urlpatterns = [
     path('books/upload/', views.upload_books),
     path('ask/', views.ask_question),
     path('history/', views.chat_history),
+    path('api/feedback/', submit_feedback, name='feedback'),
 ]

@@ -6,6 +6,7 @@ export default function QnA() {
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     axios.get('https://web-production-93bef.up.railway.app/api/history/').then(r => setHistory(r.data));
@@ -35,12 +36,31 @@ export default function QnA() {
             padding:'12px 24px',borderRadius:'8px',cursor:'pointer',fontSize:'16px',width:'100%'}}>
           {loading ? '⏳ Thinking...' : '🔍 Ask Question'}
         </button>
-        {answer && (
-          <div style={{marginTop:'20px',background:'#0f172a',borderRadius:'8px',padding:'16px'}}>
-            <p style={{color:'#6366f1',fontWeight:'bold',marginBottom:'8px'}}>🤖 AI Answer:</p>
-            <p style={{color:'white',lineHeight:'1.6'}}>{answer}</p>
-          </div>
-        )}
+          {answer && (
+            <div style={{marginTop:'20px',background:'#0f172a',borderRadius:'8px',padding:'16px'}}>
+              <p style={{color:'#6366f1',fontWeight:'bold',marginBottom:'8px'}}>🤖 AI Answer:</p>
+              <p style={{color:'white',lineHeight:'1.6'}}>{answer}</p>
+              <div style={{marginTop:'12px',display:'flex',gap:'12px'}}>
+                <button onClick={() => {
+                  setFeedback('up');
+                  axios.post('https://web-production-93bef.up.railway.app/api/feedback/', 
+                    {question, answer, feedback:'up'});
+                }} style={{
+                  padding:'8px 16px', background: feedback==='up' ? '#22c55e' : '#1e293b',
+                  color:'white', border:'1px solid #333', borderRadius:'8px', cursor:'pointer'
+                }}>👍 Helpful</button>
+                <button onClick={() => {
+                  setFeedback('down');
+                  axios.post('https://web-production-93bef.up.railway.app/api/feedback/', 
+                    {question, answer, feedback:'down'});
+                }} style={{
+                  padding:'8px 16px', background: feedback==='down' ? '#ef4444' : '#1e293b',
+                  color:'white', border:'1px solid #333', borderRadius:'8px', cursor:'pointer'
+                }}>👎 Not Helpful</button>
+                {feedback && <p style={{color:'#94a3b8',alignSelf:'center'}}>Thanks for feedback!</p>}
+              </div>
+            </div>
+            )}
       </div>
       {history.length > 0 && (
         <div>

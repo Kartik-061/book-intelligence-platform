@@ -5,6 +5,7 @@ from .models import Book, ChatHistory
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import Book, ChatHistory, AIFeedback
 from .serializers import BookSerializer, ChatHistorySerializer
 from google import genai
 from django.conf import settings
@@ -159,3 +160,22 @@ def register_user(request):
     
     User.objects.create_user(username=username, password=password)
     return Response({'message': 'User created successfully'}, status=201)
+
+@api_view(['POST'])
+def submit_feedback(request):
+    question = request.data.get('question')
+    answer = request.data.get('answer')
+    feedback = request.data.get('feedback')
+    
+    if not all([question, answer, feedback]):
+        return Response({'error': 'All fields required'}, status=400)
+    
+    if feedback not in ['up', 'down']:
+        return Response({'error': 'Invalid feedback'}, status=400)
+    
+    AIFeedback.objects.create(
+        question=question,
+        answer=answer,
+        feedback=feedback
+    )
+    return Response({'message': 'Feedback saved!'}, status=201)

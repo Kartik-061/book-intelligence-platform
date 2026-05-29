@@ -28,3 +28,15 @@ class ChatHistory(models.Model):
 
     def __str__(self):
         return self.question[:50]
+class AIFeedback(models.Model):
+    FEEDBACK_CHOICES = [
+        ('up', 'Thumbs Up'),
+        ('down', 'Thumbs Down'),
+    ]
+    question = models.TextField()
+    answer = models.TextField()
+    feedback = models.CharField(max_length=10, choices=FEEDBACK_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.feedback} - {self.question[:50]}"
