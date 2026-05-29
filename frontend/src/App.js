@@ -4,6 +4,7 @@ import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import QnA from './components/QnA';
 import { AuthProvider, useAuth } from './AuthContext';
+import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
 import './App.css';
@@ -51,7 +52,11 @@ function App() {
           <Routes>
             <Route path="/" element={<BookList />} />
             <Route path="/book/:id" element={<BookDetail />} />
-            <Route path="/qa" element={<QnA />} />
+            <Route path="/qa" element={
+              <ProtectedRoute>
+                <QnA />
+            </ProtectedRoute>
+            } />
           </Routes>
         </div>
       </Router>
