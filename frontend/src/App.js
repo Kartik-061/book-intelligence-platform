@@ -4,6 +4,7 @@ import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import QnA from './components/QnA';
 import { AuthProvider, useAuth } from './AuthContext';
+import PrivacyPolicy from './PrivacyPolicy';
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
@@ -52,6 +53,7 @@ function App() {
           <Routes>
             <Route path="/" element={<BookList />} />
             <Route path="/book/:id" element={<BookDetail />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/qa" element={
               <ProtectedRoute>
                 <QnA />
@@ -59,6 +61,9 @@ function App() {
             } />
           </Routes>
         </div>
+        <footer style={{background:'#1e293b',padding:'16px 32px',textAlign:'center'}}>
+          <a href="/privacy" style={{color:'#94a3b8',fontSize:'14px',textDecoration:'none'}}>Privacy Policy</a>
+        </footer>
       </Router>
     </AuthProvider>
   );
