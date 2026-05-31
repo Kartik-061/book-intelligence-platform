@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./backend
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=False
+    volumes:
+      - sqlite_data:/app/db.sqlite3
+      - chroma_data:/app/chroma_db
+    ports:
+      - "8080:8080"
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  sqlite_data:
+  chroma_data:
