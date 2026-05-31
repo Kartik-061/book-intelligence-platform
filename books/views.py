@@ -179,3 +179,21 @@ def submit_feedback(request):
         feedback=feedback
     )
     return Response({'message': 'Feedback saved!'}, status=201)
+@api_view(['GET'])
+def health_check(request):
+    import chromadb
+    try:
+        client_db = chromadb.PersistentClient(path="./chroma_db")
+        collection = client_db.get_or_create_collection("books")
+        count = collection.count()
+        return Response({
+            'status': 'healthy',
+            'database': 'connected',
+            'chromadb': 'connected',
+            'chromadb_documents': count,
+        })
+    except Exception as e:
+        return Response({
+            'status': 'unhealthy',
+            'error': str(e)
+        }, status=500)
