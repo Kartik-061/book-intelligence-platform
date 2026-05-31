@@ -11,4 +11,5 @@ urlpatterns = [
     path('ask/', views.ask_question),
     path('history/', views.chat_history),
     path('health/', health_check, name='health_check'),
+    path('feedback/', submit_feedback, name='feedback'),
 ]
