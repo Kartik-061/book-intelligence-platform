@@ -52,32 +52,13 @@ def recommend_books(request, pk):
 
 @api_view(['POST'])
 def upload_books(request):
-    """Scrape books and store with AI insights"""
     from .scraper import scrape_books
     try:
         books_data = scrape_books()
         saved = 0
         for b in books_data:
             if not Book.objects.filter(title=b['title']).exists():
-                # Generate AI insights
-                prompt = f"""For the book "{b['title']}" in genre "{b['genre']}":
-                1. Write a 2-sentence summary
-                2. Classify the genre
-                3. Analyze sentiment (Positive/Neutral/Negative)
-                Return JSON only: {{"summary": "...", "genre": "...", "sentiment": "..."}}"""
-                
-                try:
-                    ai_resp = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
-                    text = ai_resp.text.strip()
-                    if '```' in text:
-                        text = text.split('```')[1]
-                        if text.startswith('json'):
-                            text = text[4:]
-                    ai_data = json.loads(text)
-                except:
-                    ai_data = {"summary": "A great read.", "genre": b['genre'], "sentiment": "Positive"}
-                
-                book = Book.objects.create(
+                Book.objects.create(
                     title=b['title'],
                     author=b['author'],
                     rating=b['rating'],
@@ -86,21 +67,50 @@ def upload_books(request):
                     book_url=b['book_url'],
                     cover_image=b['cover_image'],
                     price=b['price'],
-                    ai_summary=ai_data.get('summary', ''),
-                    ai_genre=ai_data.get('genre', b['genre']),
-                    sentiment=ai_data.get('sentiment', 'Positive')
-                )
-                
-                # Store in ChromaDB
-                collection.add(
-                    documents=[f"{book.title} {book.description or ''} {book.ai_summary}"],
-                    ids=[str(book.id)]
+                    ai_summary='',
+                    ai_genre=b['genre'],
+                    sentiment='Pending'
                 )
                 saved += 1
-        
-        return Response({'message': f'{saved} books saved successfully'})
+        return Response({'message': f'{saved} books saved successfully. AI enrichment pending.'})
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+    
+@api_view(['POST'])
+def enrich_books(request):
+    """Call this repeatedly to enrich books in small batches"""
+    pending = Book.objects.filter(sentiment='Pending')[:5]  # batch of 5
+    enriched = 0
+    for book in pending:
+        prompt = f"""For the book "{book.title}" in genre "{book.genre}":
+        1. Write a 2-sentence summary
+        2. Classify the genre
+        3. Analyze sentiment (Positive/Neutral/Negative)
+        Return JSON only: {{"summary": "...", "genre": "...", "sentiment": "..."}}"""
+        try:
+            ai_resp = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
+            text = ai_resp.text.strip()
+            if '```' in text:
+                text = text.split('```')[1]
+                if text.startswith('json'):
+                    text = text[4:]
+            ai_data = json.loads(text)
+        except:
+            ai_data = {"summary": "A great read.", "genre": book.genre, "sentiment": "Positive"}
+        
+        book.ai_summary = ai_data.get('summary', '')
+        book.ai_genre = ai_data.get('genre', book.genre)
+        book.sentiment = ai_data.get('sentiment', 'Positive')
+        book.save()
+        
+        collection.add(
+            documents=[f"{book.title} {book.description or ''} {book.ai_summary}"],
+            ids=[str(book.id)]
+        )
+        enriched += 1
+    
+    remaining = Book.objects.filter(sentiment='Pending').count()
+    return Response({'enriched': enriched, 'remaining': remaining})
 
 @api_view(['POST'])
 def ask_question(request):
