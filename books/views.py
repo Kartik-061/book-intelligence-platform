@@ -52,9 +52,10 @@ def recommend_books(request, pk):
 
 @api_view(['POST'])
 def upload_books(request):
-    from .scraper import scrape_books
+    from .scraper import scrape_books_page
+    page = int(request.data.get('page', 1))
     try:
-        books_data = scrape_books()
+        books_data = scrape_books_page(page)
         saved = 0
         for b in books_data:
             if not Book.objects.filter(title=b['title']).exists():
@@ -72,7 +73,8 @@ def upload_books(request):
                     sentiment='Pending'
                 )
                 saved += 1
-        return Response({'message': f'{saved} books saved successfully. AI enrichment pending.'})
+        has_more = len(books_data) > 0
+        return Response({'message': f'{saved} books saved from page {page}', 'has_more': has_more, 'next_page': page + 1})
     except Exception as e:
         return Response({'error': str(e)}, status=500)
     
