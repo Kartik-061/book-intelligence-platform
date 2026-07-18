@@ -67,6 +67,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "https://book-intelligence-platform-production.up.railway.app",
     "http://localhost:3000",
+    "https://book-intelligence-platform-1.onrender.com",
 ]
 
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
