@@ -14,7 +14,7 @@ export default function Register({ onClose, onSwitchToLogin }) {
       return;
     }
     const response = await fetch(
-      "https://web-production-93bef.up.railway.app/api/register/",
+      "https://book-intelligence-platform.onrender.com/api/register/",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

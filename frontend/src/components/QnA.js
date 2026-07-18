@@ -9,14 +9,14 @@ export default function QnA() {
   const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
-    axios.get('https://web-production-93bef.up.railway.app/api/history/').then(r => setHistory(r.data));
+    axios.get('https://book-intelligence-platform.onrender.com/api/history/').then(r => setHistory(r.data));
   }, []);
 
   const askQuestion = async () => {
     if (!question.trim()) return;
     setLoading(true);
     try {
-      const res = await axios.post('https://web-production-93bef.up.railway.app/api/ask/', { question });
+      const res = await axios.post('https://book-intelligence-platform.onrender.com/api/ask/', { question });
       setAnswer(res.data.answer);
       setHistory(prev => [{question, answer: res.data.answer, id: Date.now()}, ...prev]);
     } catch(e) { setAnswer('Error getting answer. Please try again.'); }
@@ -43,7 +43,7 @@ export default function QnA() {
               <div style={{marginTop:'12px',display:'flex',gap:'12px'}}>
                 <button onClick={() => {
                   setFeedback('up');
-                  axios.post('https://web-production-93bef.up.railway.app/api/feedback/', 
+                  axios.post('https://book-intelligence-platform.onrender.com/api/feedback/', 
                     {question, answer, feedback:'up'});
                 }} style={{
                   padding:'8px 16px', background: feedback==='up' ? '#22c55e' : '#1e293b',
@@ -51,7 +51,7 @@ export default function QnA() {
                 }}>👍 Helpful</button>
                 <button onClick={() => {
                   setFeedback('down');
-                  axios.post('https://web-production-93bef.up.railway.app/api/feedback/', 
+                  axios.post('https://book-intelligence-platform.onrender.com/api/feedback/', 
                     {question, answer, feedback:'down'});
                 }} style={{
                   padding:'8px 16px', background: feedback==='down' ? '#ef4444' : '#1e293b',

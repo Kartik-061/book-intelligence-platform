@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
 
   const login = async (username, password) => {
     const response = await fetch(
-      "https://web-production-93bef.up.railway.app/api/token/",
+      "https://book-intelligence-platform.onrender.com/api/token/",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

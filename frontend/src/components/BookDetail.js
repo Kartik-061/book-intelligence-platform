@@ -8,8 +8,8 @@ export default function BookDetail() {
   const [recs, setRecs] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://web-production-93bef.up.railway.app/api/books/${id}/`).then(r => setBook(r.data));
-    axios.get(`https://web-production-93bef.up.railway.app/api/books/${id}/recommend/`).then(r => setRecs(r.data));
+    axios.get(`https://book-intelligence-platform.onrender.com/api/books/${id}/`).then(r => setBook(r.data));
+    axios.get(`https://book-intelligence-platform.onrender.com/api/books/${id}/recommend/`).then(r => setRecs(r.data));
   }, [id]);
 
   if (!book) return <p style={{color:'white',padding:'32px'}}>Loading...</p>;
