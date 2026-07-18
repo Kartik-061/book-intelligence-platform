@@ -207,3 +207,29 @@ def health_check(request):
             'status': 'unhealthy',
             'error': str(e)
         }, status=500)
+@api_view(['POST'])
+def upload_gutenberg(request):
+    from .scraper_expanded import scrape_gutenberg_page
+    page = int(request.data.get('page', 1))
+    try:
+        books_data, has_next = scrape_gutenberg_page(page)
+        saved = 0
+        for b in books_data:
+            if not Book.objects.filter(title=b['title']).exists():
+                Book.objects.create(
+                    title=b['title'],
+                    author=b['author'],
+                    rating=b['rating'],
+                    description=b['description'],
+                    genre=b['genre'],
+                    book_url=b['book_url'],
+                    cover_image=b['cover_image'],
+                    price=b['price'],
+                    ai_summary='',
+                    ai_genre=b['genre'],
+                    sentiment='Pending'
+                )
+                saved += 1
+        return Response({'message': f'{saved} books saved from page {page}', 'has_more': has_next, 'next_page': page + 1})
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

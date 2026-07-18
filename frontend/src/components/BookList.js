@@ -22,16 +22,6 @@ export default function BookList() {
     setLoading(false);
   };
 
-  const scrapeBooks = async () => {
-    setScraping(true);
-    try {
-      await axios.post(`${API_BASE}/books/upload/`);
-      await fetchBooks();
-      await enrichLoop();
-    } catch(e) { console.error(e); }
-    setScraping(false);
-  };
-
   const enrichLoop = async () => {
     setEnriching(true);
     let keepGoing = true;
@@ -52,14 +42,52 @@ export default function BookList() {
     await fetchBooks();
   };
 
+  const scrapeBooks = async () => {
+    setScraping(true);
+    try {
+      let page = 1;
+      let hasMore = true;
+      while (hasMore) {
+        const res = await axios.post(`${API_BASE}/books/upload/`, { page });
+        hasMore = res.data.has_more;
+        page = res.data.next_page;
+        await fetchBooks();
+      }
+      await enrichLoop();
+    } catch(e) { console.error(e); }
+    setScraping(false);
+  };
+
+  const scrapeGutenberg = async () => {
+    setScraping(true);
+    try {
+      let page = 1;
+      let hasMore = true;
+      while (hasMore) {
+        const res = await axios.post(`${API_BASE}/books/upload-gutenberg/`, { page });
+        hasMore = res.data.has_more;
+        page = res.data.next_page;
+        await fetchBooks();
+      }
+      await enrichLoop();
+    } catch(e) { console.error(e); }
+    setScraping(false);
+  };
+
   return (
     <div style={{padding:'32px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'24px'}}>
         <h1 style={{fontSize:'28px',fontWeight:'bold'}}>Book Library</h1>
-        <button onClick={scrapeBooks} disabled={scraping || enriching}
-          style={{background:'#6366f1',color:'white',border:'none',padding:'10px 20px',borderRadius:'8px',cursor:'pointer',fontSize:'16px'}}>
-          {scraping ? '⏳ Scraping...' : enriching ? `✨ Enriching... (${remaining} left)` : '🔄 Fetch Books'}
-        </button>
+        <div style={{display:'flex',gap:'12px'}}>
+          <button onClick={scrapeBooks} disabled={scraping || enriching}
+            style={{background:'#6366f1',color:'white',border:'none',padding:'10px 20px',borderRadius:'8px',cursor:'pointer',fontSize:'16px'}}>
+            {scraping ? '⏳ Scraping...' : enriching ? `✨ Enriching... (${remaining} left)` : '🔄 Fetch Books'}
+          </button>
+          <button onClick={scrapeGutenberg} disabled={scraping || enriching}
+            style={{background:'#8b5cf6',color:'white',border:'none',padding:'10px 20px',borderRadius:'8px',cursor:'pointer',fontSize:'16px'}}>
+            {scraping ? '⏳ Scraping...' : '📖 Fetch Gutenberg Classics'}
+          </button>
+        </div>
       </div>
       {loading && <p style={{color:'#94a3b8'}}>Loading...</p>}
       {enriching && (
